@@ -1,10 +1,18 @@
 // lib/main.dart
 
 import 'package:flutter/material.dart';
-import 'screens/home_screen.dart'; // Importa a nova tela inicial
+import 'package:provider/provider.dart'; // Importar
+import 'screens/home_screen.dart';
+import 'providers/favorites_provider.dart'; // Importar
 
 void main() {
-  runApp(const MyApp());
+  // Envolve o app todo no "Gerenciador de Estado"
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => FavoritesProvider()..loadFavorites(), // Cria o "cérebro" e já carrega os favoritos salvos
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -19,7 +27,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: const HomeScreen(), // A mágica acontece aqui
+      home: const HomeScreen(),
     );
   }
 }

@@ -1,12 +1,21 @@
 // lib/widgets/country_card.dart
 
 import 'package:flutter/material.dart';
-import '../models/country_model.dart'; // Importa o modelo
+import '../models/country_model.dart';
 
 class CountryCard extends StatelessWidget {
   final Country country;
+  // --- NOVOS PARÂMETROS ---
+  final bool isFavorite;
+  final VoidCallback onToggleFavorite; // "VoidCallback" é uma função que não recebe nada
 
-  const CountryCard({Key? key, required this.country}) : super(key: key);
+  const CountryCard({
+    Key? key,
+    required this.country,
+    // --- NOVOS PARÂMETROS ---
+    required this.isFavorite,
+    required this.onToggleFavorite,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -17,14 +26,12 @@ class CountryCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(10.0),
       ),
       child: ListTile(
-        // --- BANDEIRA ---
         leading: ClipRRect(
           borderRadius: BorderRadius.circular(4.0),
           child: Image.network(
             country.flagUrl,
             width: 60,
             fit: BoxFit.cover,
-            // Fallback em caso de erro ao carregar a imagem
             errorBuilder: (context, error, stackTrace) => Container(
               width: 60,
               height: 40,
@@ -33,12 +40,10 @@ class CountryCard extends StatelessWidget {
             ),
           ),
         ),
-        // --- NOME ---
         title: Text(
-          country.name,
+          country.namePt, // Mostra o nome em Português
           style: const TextStyle(fontWeight: FontWeight.bold),
         ),
-        // --- OUTRAS INFORMAÇÕES ---
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -48,12 +53,20 @@ class CountryCard extends StatelessWidget {
             _buildInfoRow(Icons.language, 'Língua: ${country.language}'),
           ],
         ),
-        isThreeLine: true, // Garante espaço para o subtítulo
+        isThreeLine: true,
+        
+        // --- BOTÃO DE FAVORITO ---
+        trailing: IconButton(
+          icon: Icon(
+            isFavorite ? Icons.star : Icons.star_border, // Ícone preenchido ou não
+            color: isFavorite ? Colors.amber : Colors.grey, // Cor
+          ),
+          onPressed: onToggleFavorite, // Chama a função que foi passada
+        ),
       ),
     );
   }
 
-  // Widget auxiliar para formatar as linhas de informação
   Widget _buildInfoRow(IconData icon, String text) {
     return Padding(
       padding: const EdgeInsets.only(top: 4.0),

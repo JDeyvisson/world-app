@@ -39,8 +39,9 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> _fetchCountries() async {
     try {
       final countries = await _countryService.fetchCountries();
-      // Ordena a lista alfabeticamente
-      countries.sort((a, b) => a.name.compareTo(b.name));
+      
+      // MUDANÇA AQUI: Ordenar por 'namePt' (Português) em vez de 'name'
+      countries.sort((a, b) => a.namePt.compareTo(b.namePt));
       
       setState(() {
         _allCountries = countries;
@@ -139,18 +140,31 @@ class _HomeScreenState extends State<HomeScreen> {
       );
     }
 
-    // --- MUDANÇA PRINCIPAL AQUI ---
-    // Usamos um "Consumer" para "ouvir" o provider de favoritos
     return Consumer<FavoritesProvider>(
       builder: (context, favoritesProvider, child) {
         
-        // O ListView agora é construído DENTRO do Consumer
+        final List<Country> displayList = List.from(_filteredCountries);
+
+        // --- LÓGICA DE ORDENAÇÃO CORRIGIDA ---
+        displayList.sort((a, b) {
+          final bool isAFav = favoritesProvider.isFavorite(a.name);
+          final bool isBFav = favoritesProvider.isFavorite(b.name);
+
+          // Regra 1: Favoritos vêm antes de não-favoritos.
+          if (isAFav && !isBFav) return -1;
+          if (!isAFav && isBFav) return 1;
+
+          // Regra 2: (O DESEMPATE)
+          // Se ambos são favoritos, ou ambos são não-favoritos,
+          // usa a ordem alfabética por nome em português.
+          return a.namePt.compareTo(b.namePt); // <-- A CORREÇÃO ESTÁ AQUI
+        });
+
+        // O resto da função é igual...
         return ListView.builder(
-          itemCount: _filteredCountries.length,
+          itemCount: displayList.length,
           itemBuilder: (context, index) {
-            final country = _filteredCountries[index];
-            
-            // Pergunta ao provider se este país é favorito
+            final country = displayList[index];
             final bool isFav = favoritesProvider.isFavorite(country.name);
 
             return GestureDetector(
@@ -164,13 +178,10 @@ class _HomeScreenState extends State<HomeScreen> {
               },
               child: Hero(
                 tag: country.flagUrl,
-                // Passa o status de favorito e a função de clique
-                // para o CountryCard
                 child: CountryCard(
                   country: country,
                   isFavorite: isFav,
                   onToggleFavorite: () {
-                    // Chama a função de toggle do provider
                     favoritesProvider.toggleFavorite(country.name);
                   },
                 ),

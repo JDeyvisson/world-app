@@ -1,8 +1,6 @@
-// lib/models/country_model.dart
-
 class Country {
-  final String name; // Nome em inglês (ex: Germany)
-  final String namePt; // Nome em português (ex: Alemanha)
+  final String name; 
+  final String namePt; 
   final String capital;
   final String currency;
   final String language;
@@ -17,7 +15,7 @@ class Country {
 
   Country({
     required this.name,
-    required this.namePt, // Adicionado
+    required this.namePt, 
     required this.capital,
     required this.currency,
     required this.language,
@@ -31,7 +29,6 @@ class Country {
   });
 
   factory Country.fromJson(Map<String, dynamic> json) {
-    // --- Funções auxiliares ---
     String getCurrency(Map<String, dynamic>? currencies) {
       if (currencies == null || currencies.isEmpty) return 'N/A';
       return currencies.values.first['name'] ?? 'N/A';
@@ -47,17 +44,14 @@ class Country {
       return capital.first ?? 'N/A';
     }
 
-    // --- LÓGICA DE TRADUÇÃO CORRIGIDA ---
     String getNamePt(
         Map<String, dynamic>? translations, String defaultName) {
       if (translations == null) return defaultName;
       
-      // A API usa 'por' para Português (Brasil e Portugal)
       if (translations['por'] != null && translations['por']['common'] != null) {
         return translations['por']['common'];
       }
-      
-      // Se não achar tradução em PT, retorna o nome em inglês
+
       return defaultName;
     }
 
@@ -65,7 +59,6 @@ class Country {
 
     return Country(
       name: defaultName,
-      // Usa a nova lógica corrigida
       namePt: getNamePt(json['translations'] as Map<String, dynamic>?, defaultName), 
       capital: getCapital(json['capital'] as List<dynamic>?),
       currency: getCurrency(json['currencies'] as Map<String, dynamic>?),
@@ -83,7 +76,6 @@ class Country {
     );
   }
 
-  // Método 'copyWithDetails' (sem mudanças)
   Country copyWithDetails({
     required int population,
     required double area,
@@ -93,7 +85,7 @@ class Country {
   }) {
     return Country(
       name: this.name,
-      namePt: this.namePt, // Apenas passa o valor adiante
+      namePt: this.namePt, 
       capital: this.capital,
       currency: this.currency,
       language: this.language,

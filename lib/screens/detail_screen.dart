@@ -8,7 +8,6 @@ import 'package:provider/provider.dart';
 import '../providers/favorites_provider.dart';
 
 class DetailScreen extends StatefulWidget {
-  // Recebe o país "básico" da home screen
   final Country country;
 
   const DetailScreen({Key? key, required this.country}) : super(key: key);
@@ -18,14 +17,12 @@ class DetailScreen extends StatefulWidget {
 }
 
 class _DetailScreenState extends State<DetailScreen> {
-  // Estado para armazenar o país "completo"
   late Future<Country> _detailedCountryFuture;
   final CountryService _countryService = CountryService();
 
   @override
   void initState() {
     super.initState();
-    // Inicia a busca pelos detalhes assim que a tela abre
     _detailedCountryFuture =
         _countryService.fetchCountryDetails(widget.country);
   }
@@ -36,11 +33,9 @@ class _DetailScreenState extends State<DetailScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.country.namePt), // Mostra nome em PT
-        
-        // --- BOTÃO DE FAVORITO NA APPBAR ---
+        title: Text(widget.country.namePt), 
+
         actions: [
-          // Ouve o provider para construir o botão
           Consumer<FavoritesProvider>(
             builder: (context, favoritesProvider, child) {
               final bool isFav =
@@ -62,12 +57,10 @@ class _DetailScreenState extends State<DetailScreen> {
       body: FutureBuilder<Country>(
         future: _detailedCountryFuture,
         builder: (context, snapshot) {
-          // --- ESTADO DE LOADING ---
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           }
 
-          // --- ESTADO DE ERRO ---
           if (snapshot.hasError || !snapshot.hasData) {
             return Center(
               child: Text(
@@ -78,10 +71,8 @@ class _DetailScreenState extends State<DetailScreen> {
             );
           }
 
-          // --- ESTADO DE SUCESSO ---
-          final country = snapshot.data!; // Agora temos o país completo!
+          final country = snapshot.data!;
 
-          // O resto da UI é igual a antes, mas agora usa "country."
           return ListView(
             padding: const EdgeInsets.all(16.0),
             children: [
@@ -130,7 +121,6 @@ class _DetailScreenState extends State<DetailScreen> {
     );
   }
 
-  // --- Widgets Auxiliares (sem mudança, mas copiados para cá) ---
   Widget _buildInfoCard(
       {required String title, required List<Widget> children}) {
     return Card(

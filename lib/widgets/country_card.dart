@@ -1,18 +1,14 @@
-// lib/widgets/country_card.dart
-
 import 'package:flutter/material.dart';
 import '../models/country_model.dart';
 
 class CountryCard extends StatelessWidget {
   final Country country;
-  // --- NOVOS PARÂMETROS ---
   final bool isFavorite;
-  final VoidCallback onToggleFavorite; // "VoidCallback" é uma função que não recebe nada
+  final VoidCallback onToggleFavorite; 
 
   const CountryCard({
     Key? key,
     required this.country,
-    // --- NOVOS PARÂMETROS ---
     required this.isFavorite,
     required this.onToggleFavorite,
   }) : super(key: key);
@@ -41,7 +37,7 @@ class CountryCard extends StatelessWidget {
           ),
         ),
         title: Text(
-          country.namePt, // Mostra o nome em Português
+          country.namePt, 
           style: const TextStyle(fontWeight: FontWeight.bold),
         ),
         subtitle: Column(
@@ -55,13 +51,12 @@ class CountryCard extends StatelessWidget {
         ),
         isThreeLine: true,
         
-        // --- BOTÃO DE FAVORITO ---
         trailing: IconButton(
           icon: Icon(
-            isFavorite ? Icons.star : Icons.star_border, // Ícone preenchido ou não
-            color: isFavorite ? Colors.amber : Colors.grey, // Cor
+            isFavorite ? Icons.star : Icons.star_border, 
+            color: isFavorite ? Colors.amber : Colors.grey, 
           ),
-          onPressed: onToggleFavorite, // Chama a função que foi passada
+          onPressed: onToggleFavorite, 
         ),
       ),
     );

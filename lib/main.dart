@@ -1,15 +1,12 @@
-// lib/main.dart
-
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart'; // Importar
+import 'package:provider/provider.dart'; 
 import 'screens/home_screen.dart';
-import 'providers/favorites_provider.dart'; // Importar
+import 'providers/favorites_provider.dart'; 
 
 void main() {
-  // Envolve o app todo no "Gerenciador de Estado"
   runApp(
     ChangeNotifierProvider(
-      create: (context) => FavoritesProvider()..loadFavorites(), // Cria o "cérebro" e já carrega os favoritos salvos
+      create: (context) => FavoritesProvider()..loadFavorites(), 
       child: const MyApp(),
     ),
   );

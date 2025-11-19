@@ -1,5 +1,3 @@
-// lib/services/country_service.dart
-
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
@@ -8,9 +6,7 @@ import '../models/country_model.dart';
 class CountryService {
   final String _baseUrl = 'https://restcountries.com/v3.1';
 
-  // --- FUNÇÃO 1: Para a lista da Home Screen ---
   Future<List<Country>> fetchCountries() async {
-    // ADICIONAMOS 'translations' à lista de campos
     final url =
         '$_baseUrl/all?fields=name,capital,currencies,languages,region,flags,translations';
     try {
@@ -32,7 +28,6 @@ class CountryService {
     }
   }
 
-  // --- FUNÇÃO 2: Para a Tela de Detalhes (sem mudança aqui) ---
   Future<Country> fetchCountryDetails(Country country) async {
     final url =
         '$_baseUrl/name/${country.name}?fields=population,area,subregion,borders,landlocked&fullText=true';
